@@ -1,13 +1,17 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
+
+//functions used
+
 
 //defn for nodes for adjacency list
 struct node
 {
   int vertex;
-  int* data; //array that will hold data from all the weeks and years
+  double* data; //array that will hold data from all the weeks and years
   struct node* next;
 };
 
@@ -15,11 +19,50 @@ struct node
 struct graph
 {
   int numVertices;
-  struct node*** adjacencyList; //2D array of pointers to nodes
+  struct node** adjacencyList; //array of pointers to nodes for adjacency list
 };
 
 int main(int argc, char** argv)
 {
+  //make new graph
+  graph* iceGraph = new graph;
+  iceGraph->numVertices = 3969;
+  iceGraph->adjacencyList = new node*[iceGraph->numVertices];
+
+  //declare arrays of data for all vertices
+  for(int i = 0; i < iceGraph->numVertices; i++)
+    {
+      iceGraph->adjacencyList[i] = new node;
+      iceGraph->adjacencyList[i]->data = new double[52*16];
+    }
+  string file = "";
+  int year = 0;
+  int week = 0;
+  string weekStr = "";
+
+  //iterating through all year folders
+  for(int i = 0; i < 16; i++)
+    {
+      year = 1990 + i;
+      //iterating through all weeks
+      for(int j = 1; j <= 52; j++)
+	{
+	  week = j;
+	  if(j < 10)
+	    weekStr = to_string(0) + to_string(j);
+	  else
+	    weekStr = to_string(j);
+	  file = to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
+	  cout << file << endl; 
+	} 
+    }
+  //populates graph/adjacency list
+  for(int i = 0; i < iceGraph->numVertices; i++)
+    {
+
+    }
+
+  /*
   ifstream inputFile("1990/Beaufort_Sea_diffw01y1990+landmask", ios::in | ios::binary);
   float dataIn = 0;
   int count = 0;
@@ -34,4 +77,5 @@ int main(int argc, char** argv)
     }
   inputFile.close();
   return 0;
+  */
 }
