@@ -33,8 +33,11 @@ int main(int argc, char** argv)
   for(int i = 0; i < iceGraph->numVertices; i++)
     {
       iceGraph->adjacencyList[i] = new node;
-      iceGraph->adjacencyList[i]->data = new double[52*16];
+      iceGraph->adjacencyList[i]->vertex = i;
+      iceGraph->adjacencyList[i]->data = new double[832];
+      iceGraph->adjacencyList[i]->next = NULL;
     }
+
   string file = "";
   int year = 0;
   int week = 0;
@@ -53,13 +56,28 @@ int main(int argc, char** argv)
 	  else
 	    weekStr = to_string(j);
 	  file = to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
-	  cout << file << endl; 
+	  cout << file << endl;
+	  //opening and reading binary files info arrays of sea ice concentration
+	  ifstream inputFile(file, ios::in | ios::binary);
+	  double dataIn = 0;
+	  int vertex = 0;
+	  int time = 0;
+	  inputFile.read((char*)&dataIn, 4);
+	  while(!inputFile.eof())
+	    {
+     	      //cout << dataIn << "\t";
+	      iceGraph->adjacencyList[vertex]->data[time] = dataIn;
+	      inputFile.read((char*)&dataIn, 4);
+	      vertex++;
+	    }
+	  time++;
+	  inputFile.close();
 	} 
     }
-  //populates graph/adjacency list
-  for(int i = 0; i < iceGraph->numVertices; i++)
-    {
 
+  for(int i = 0; i < 832; i++)
+    {
+      //cout << iceGraph->adjacencyList[0]->data[i] << endl;
     }
 
   /*
@@ -76,6 +94,6 @@ int main(int argc, char** argv)
 	cout << endl;
     }
   inputFile.close();
-  return 0;
   */
+  return 0;
 }
