@@ -21,6 +21,10 @@ struct graph
 
 //functions used
 void fillMeans(graph*, float*&);
+int getSxx(graph*, float*);
+int getSyy(graph*, float*);
+int getSxy(graph*, float*);
+int getR(graph*, float*);
 
 int main(int argc, char** argv)
 {
@@ -103,7 +107,7 @@ int main(int argc, char** argv)
 //fills array of means
 void fillMeans(graph* iceGraph, float*& means)
 {
-  float sum = 0;
+  float sum;
   float mean = 0;
   float numIce = 0; //vertices that are not land
 
@@ -117,7 +121,8 @@ void fillMeans(graph* iceGraph, float*& means)
   //fills array of means
   for(int i = 0; i < 3969; i++)
     {
-      if(iceGraph->adjacencyList[i]->data[0] != 168)
+      sum = 0;
+      if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[i]->data[0] != 157)
 	{
 	  for(int j = 0; j < 832; j++)
 	    {
