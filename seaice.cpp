@@ -11,7 +11,7 @@ using namespace std;
 struct node
 {
   int vertex;
-  double* data; //array that will hold data from all the weeks and years
+  float* data; //array that will hold data from all the weeks and years
   struct node* next;
 };
 
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     {
       iceGraph->adjacencyList[i] = new node;
       iceGraph->adjacencyList[i]->vertex = i;
-      iceGraph->adjacencyList[i]->data = new double[832];
+      iceGraph->adjacencyList[i]->data = new float[832];
       iceGraph->adjacencyList[i]->next = NULL;
     }
 
@@ -42,30 +42,30 @@ int main(int argc, char** argv)
   int year = 0;
   int week = 0;
   string weekStr = "";
+  int vertex;
+  int time = 0;
 
   //iterating through all year folders
-  for(int i = 0; i < 16; i++)
+    for(int i = 0; i < 16; i++)
     {
       year = 1990 + i;
       //iterating through all weeks
       for(int j = 1; j <= 52; j++)
 	{
+	  vertex = 0;
 	  week = j;
 	  if(j < 10)
 	    weekStr = to_string(0) + to_string(j);
 	  else
 	    weekStr = to_string(j);
 	  file = to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
-	  cout << file << endl;
+	  //cout << file << endl;
 	  //opening and reading binary files info arrays of sea ice concentration
 	  ifstream inputFile(file, ios::in | ios::binary);
-	  double dataIn = 0;
-	  int vertex = 0;
-	  int time = 0;
+	  float dataIn = 0;
 	  inputFile.read((char*)&dataIn, 4);
 	  while(!inputFile.eof())
 	    {
-     	      //cout << dataIn << "\t";
 	      iceGraph->adjacencyList[vertex]->data[time] = dataIn;
 	      inputFile.read((char*)&dataIn, 4);
 	      vertex++;
@@ -74,14 +74,14 @@ int main(int argc, char** argv)
 	  inputFile.close();
 	} 
     }
-
+  
   for(int i = 0; i < 832; i++)
     {
-      //cout << iceGraph->adjacencyList[0]->data[i] << endl;
+      cout << iceGraph->adjacencyList[16]->data[i] << endl;
     }
 
-  /*
-  ifstream inputFile("1990/Beaufort_Sea_diffw01y1990+landmask", ios::in | ios::binary);
+  /*  
+  ifstream inputFile("2005/Beaufort_Sea_diffw52y2005+landmask", ios::in | ios::binary);
   float dataIn = 0;
   int count = 0;
   inputFile.read((char*)&dataIn, 4);
