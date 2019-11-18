@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
@@ -21,10 +22,10 @@ struct graph
 
 //functions used
 void fillMeans(graph*, float*&);
-int getSxx(graph*, float*);
-int getSyy(graph*, float*);
-int getSxy(graph*, float*);
-int getR(graph*, float*);
+float getSxx(node*, float*);
+float getSxy(node*, node*, float*);
+float getR(node*, node*, float*);
+void makeGraph(graph*&, float*);
 
 int main(int argc, char** argv)
 {
@@ -83,24 +84,20 @@ int main(int argc, char** argv)
   //fills array of means
   fillMeans(iceGraph, means);
 
-  for(int i = 0; i < 832; i++)
-    cout << means[i] << endl;
-
-  /*  
-  ifstream inputFile("2005/Beaufort_Sea_diffw52y2005+landmask", ios::in | ios::binary);
-  float dataIn = 0;
   int count = 0;
-  inputFile.read((char*)&dataIn, 4);
-  while(!inputFile.eof())
+  //finding R for all combos
+  for(int i = 0; i < 3968; i++)
     {
-      cout << dataIn << " ";
-      inputFile.read((char*)&dataIn, 4);
-      count++;
-      if(count % 63 == 0)
-	cout << endl;
+      for(int j = i+1; j < 3969; j++)
+	{
+	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168 && abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means)) > 0)
+	    {
+	      cout << getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means) << endl;
+	      count ++;	
+	    }
+	}
     }
-  inputFile.close();
-  */
+  cout << count << endl;
   return 0;
 }
 
@@ -132,4 +129,66 @@ void fillMeans(graph* iceGraph, float*& means)
 	  means[i] = mean;
 	}
     } 
+}
+
+float getSxx(node* point, float* means)
+{
+  float sum = 0;
+  for(int i = 0; i < 832; i++)
+    {
+      sum = sum + pow((point->data[i] - means[point->vertex]), 2);
+    }
+  return sum;
+}
+
+float getSxy(node* point1, node* point2, float* means)
+{
+  float sum = 0;
+  for(int i = 0; i < 832; i++)
+    {
+      sum = sum + (point1->data[i] - means[point1->vertex]) * (point2->data[i] - means[point2->vertex]);
+    }
+  return sum;
+}
+
+float getR(node* point1, node* point2, float* means)
+{
+  float Sxx = getSxx(point1, means);
+  float Syy = getSxx(point2, means);
+  float Sxy = getSxy(point1, point2, means);
+  float r = Sxy/(sqrt(Sxx*Syy));
+  return r;
+}
+
+//constructs graph with adjacency list representation
+void makeGraph(graph*& iceGraph, float* means)
+{
+  float threshHold = 0.9;
+  float R;
+  node* head = NULL;
+
+  for(int i = 0; i < 3969; i++)
+    {
+      for(int j = 0; j < 3969; j++)
+	{
+	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168 && R > threshHold && i != j)
+	    {
+	      R = abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means));
+	      head = iceGraph->adjacencyList[i];
+	      
+	      //making copy of node to be inserted
+	      node* entry = new node;
+	      entry->vertex = iceGraph->adjacencyList[j]->vertex;
+	      for(int k = 0; k < 832; k++)
+		entry->data[k] = iceGraph->adjacencyList[j]->data[k];
+
+	      if(head == NULL)
+		entry->next = NULL;
+	      else
+		entry->next = head;
+	      iceGraph->adjacencyList[i] = entry;
+	    }
+	}
+    }
+
 }
