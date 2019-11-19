@@ -21,12 +21,12 @@ struct graph
 };
 
 //functions used
-void fillMeans(graph*, float*&);
-float getSxx(node*, float*);
-float getSxy(node*, node*, float*);
-float getR(node*, node*, float*);
-void makeGraph(graph*&, float*);
-int getChainSize(node*);
+void fillMeans(graph*&, float*&);
+float getSxx(node*&, float*&);
+float getSxy(node*&, node*&, float*&);
+float getR(node*&, node*&, float*&);
+void makeGraph(graph*&, float*&);
+int getChainSize(node*&);
 
 int main(int argc, char** argv)
 {
@@ -88,13 +88,13 @@ int main(int argc, char** argv)
   int count = 0;
   //finding R for all combos
   /*
-  for(int i = 0; i < 3968; i++)
+  for(int i = 0; i < 3969; i++)
     {
-      for(int j = i+1; j < 3969; j++)
+      for(int j = 0; j < 3969; j++)
 	{
 	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168 && abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means)) > 0)
 	    {
-	      cout << getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means) << endl;
+	      cout << abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means)) << endl;
 	      count ++;	
 	    }
 	}
@@ -102,15 +102,19 @@ int main(int argc, char** argv)
   cout << count << endl;
   */
 
+  makeGraph(iceGraph, means);
+
+  /*  
   for(int i = 0; i < 3969; i++)
     {
       cout << "Num edges of " << i << ": " << getChainSize(iceGraph->adjacencyList[i]) << endl;
     }
+  */
   return 0;
 }
 
 //fills array of means
-void fillMeans(graph* iceGraph, float*& means)
+void fillMeans(graph*& iceGraph, float*& means)
 {
   float sum;
   float mean = 0;
@@ -139,7 +143,7 @@ void fillMeans(graph* iceGraph, float*& means)
     } 
 }
 
-float getSxx(node* point, float* means)
+float getSxx(node*& point, float*& means)
 {
   float sum = 0;
   for(int i = 0; i < 832; i++)
@@ -149,7 +153,7 @@ float getSxx(node* point, float* means)
   return sum;
 }
 
-float getSxy(node* point1, node* point2, float* means)
+float getSxy(node*& point1, node*& point2, float*& means)
 {
   float sum = 0;
   for(int i = 0; i < 832; i++)
@@ -159,7 +163,7 @@ float getSxy(node* point1, node* point2, float* means)
   return sum;
 }
 
-float getR(node* point1, node* point2, float* means)
+float getR(node*& point1, node*& point2, float*& means)
 {
   float Sxx = getSxx(point1, means);
   float Syy = getSxx(point2, means);
@@ -169,32 +173,39 @@ float getR(node* point1, node* point2, float* means)
 }
 
 //constructs graph with adjacency list representation
-void makeGraph(graph*& iceGraph, float* means)
+void makeGraph(graph*& iceGraph, float*& means)
 {
-  float threshHold = 0.1;
-  float R;
+  float threshHold = 0.9;
+  float R = 0;
   node* head = NULL;
+  int count = 0;
 
   for(int i = 0; i < 3969; i++)
     {
       for(int j = 0; j < 3969; j++)
 	{
-	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168 && R > threshHold && i != j)
+	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168 && i != j)
 	    {
 	      R = abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means));
-	      head = iceGraph->adjacencyList[i];
+	      if(R > threshHold)
+		{
+		  head = iceGraph->adjacencyList[i];
 	      
-	      //making copy of node to be inserted
-	      node* entry = new node;
-	      entry->vertex = iceGraph->adjacencyList[j]->vertex;
-	      for(int k = 0; k < 832; k++)
-		entry->data[k] = iceGraph->adjacencyList[j]->data[k];
+		  //making copy of node to be inserted
+		  node* entry = new node;
+		  entry->vertex = iceGraph->adjacencyList[j]->vertex;
+		  entry->data = new float[832];
+		  for(int k = 0; k < 832; k++)
+		    entry->data[k] = iceGraph->adjacencyList[j]->data[k];
 
-	      if(head == NULL)
-		entry->next = NULL;
-	      else
-		entry->next = head;
-	      iceGraph->adjacencyList[i] = entry;
+		  if(head == NULL)
+		    entry->next = NULL;
+		  else
+		    entry->next = head;
+		  iceGraph->adjacencyList[i] = entry;
+		  count++;
+		  cout << count << endl;
+		}
 	    }
 	}
     }
@@ -202,7 +213,7 @@ void makeGraph(graph*& iceGraph, float* means)
 }
 
 //returns size of adjacency list chain
-int getChainSize(node* point)
+int getChainSize(node*& point)
 {
   int count = 0;
   node* current = point;
