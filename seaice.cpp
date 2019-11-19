@@ -26,6 +26,7 @@ float getSxx(node*, float*);
 float getSxy(node*, node*, float*);
 float getR(node*, node*, float*);
 void makeGraph(graph*&, float*);
+int getChainSize(node*);
 
 int main(int argc, char** argv)
 {
@@ -86,6 +87,7 @@ int main(int argc, char** argv)
 
   int count = 0;
   //finding R for all combos
+  /*
   for(int i = 0; i < 3968; i++)
     {
       for(int j = i+1; j < 3969; j++)
@@ -98,6 +100,12 @@ int main(int argc, char** argv)
 	}
     }
   cout << count << endl;
+  */
+
+  for(int i = 0; i < 3969; i++)
+    {
+      cout << "Num edges of " << i << ": " << getChainSize(iceGraph->adjacencyList[i]) << endl;
+    }
   return 0;
 }
 
@@ -163,7 +171,7 @@ float getR(node* point1, node* point2, float* means)
 //constructs graph with adjacency list representation
 void makeGraph(graph*& iceGraph, float* means)
 {
-  float threshHold = 0.9;
+  float threshHold = 0.1;
   float R;
   node* head = NULL;
 
@@ -191,4 +199,17 @@ void makeGraph(graph*& iceGraph, float* means)
 	}
     }
 
+}
+
+//returns size of adjacency list chain
+int getChainSize(node* point)
+{
+  int count = 0;
+  node* current = point;
+  while(current != NULL)
+    {
+      count++;
+      current = current->next;
+    }
+  return count;
 }
