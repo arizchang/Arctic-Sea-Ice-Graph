@@ -104,12 +104,26 @@ int main(int argc, char** argv)
 
   makeGraph(iceGraph, means);
 
-  /*  
+  int max = 0;
   for(int i = 0; i < 3969; i++)
     {
-      cout << "Num edges of " << i << ": " << getChainSize(iceGraph->adjacencyList[i]) << endl;
+      //cout << getChainSize(iceGraph->adjacencyList[i]) << endl;
+      if(getChainSize(iceGraph->adjacencyList[i]) > max && iceGraph->adjacencyList[i]->data[0] != 168)
+	max = getChainSize(iceGraph->adjacencyList[i]);
     }
-  */
+  //cout << "Max degree: " << max << endl;
+
+  int num;  
+  for(int i = 0; i < max; i++)
+    {
+      num = 0;
+      for(int j = 0; j < 3969; j++)
+	{
+	  if(getChainSize(iceGraph->adjacencyList[j]) == i)
+	    num++;
+	}
+      cout << "Number with degree size " << i << ": " << num << endl;
+    }
   return 0;
 }
 
@@ -118,7 +132,7 @@ void fillMeans(graph*& iceGraph, float*& means)
 {
   float sum;
   float mean = 0;
-  float numIce = 0; //vertices that are not land
+  int numIce = 0; //vertices that are not land
 
   //determines how many vertices are actually ice
   for(int i = 0; i < 3969; i++)
@@ -143,6 +157,7 @@ void fillMeans(graph*& iceGraph, float*& means)
     } 
 }
 
+//returns Sxx or Syy
 float getSxx(node*& point, float*& means)
 {
   float sum = 0;
@@ -153,6 +168,7 @@ float getSxx(node*& point, float*& means)
   return sum;
 }
 
+//returns Sxy
 float getSxy(node*& point1, node*& point2, float*& means)
 {
   float sum = 0;
@@ -163,6 +179,7 @@ float getSxy(node*& point1, node*& point2, float*& means)
   return sum;
 }
 
+//returns R
 float getR(node*& point1, node*& point2, float*& means)
 {
   float Sxx = getSxx(point1, means);
@@ -175,41 +192,45 @@ float getR(node*& point1, node*& point2, float*& means)
 //constructs graph with adjacency list representation
 void makeGraph(graph*& iceGraph, float*& means)
 {
-  float threshHold = 0.9;
+  float threshHold = 0.95;
   float R = 0;
-  node* head = NULL;
+  node* current = NULL;
   int count = 0;
 
-  for(int i = 0; i < 3969; i++)
+  for(int i = 0; i < 3968; i++)
     {
-      for(int j = 0; j < 3969; j++)
+      for(int j = i+1; j < 3969; j++)
 	{
-	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168 && i != j)
+	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168)
 	    {
 	      R = abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means));
-	      if(R > threshHold)
+	      if(R >= threshHold)
 		{
-		  head = iceGraph->adjacencyList[i];
+		  current = iceGraph->adjacencyList[i];
 	      
 		  //making copy of node to be inserted
 		  node* entry = new node;
 		  entry->vertex = iceGraph->adjacencyList[j]->vertex;
-		  entry->data = new float[832];
-		  for(int k = 0; k < 832; k++)
-		    entry->data[k] = iceGraph->adjacencyList[j]->data[k];
+		  entry->next = NULL;
+		  while(current->next != NULL)
+		    current = current->next;
+		  current->next = entry;
 
-		  if(head == NULL)
-		    entry->next = NULL;
-		  else
-		    entry->next = head;
-		  iceGraph->adjacencyList[i] = entry;
+		  //making a copy of second node to be inserted
+		  current = iceGraph->adjacencyList[j];
+		  node* entry2 = new node;
+		  entry2->vertex = iceGraph->adjacencyList[i]->vertex;
+		  entry2->next = NULL;
+		  while(current->next !=  NULL)
+		    current = current->next;
+		  current->next = entry2;
+		  
 		  count++;
 		  cout << count << endl;
 		}
 	    }
 	}
     }
-
 }
 
 //returns size of adjacency list chain
@@ -222,5 +243,5 @@ int getChainSize(node*& point)
       count++;
       current = current->next;
     }
-  return count;
+  return count-1;
 }
