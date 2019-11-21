@@ -10,6 +10,9 @@ struct node
 {
   int vertex;
   float* data; //array that will hold data from all the weeks and years
+  int color; //0 is white, 1 is gray, 2 is black
+  int discoveryTime;
+  int finishTime;
   struct node* next;
 };
 
@@ -17,6 +20,7 @@ struct node
 struct graph
 {
   int numVertices;
+  int time;
   struct node** adjacencyList; //array of pointers to nodes for adjacency list
 };
 
@@ -27,6 +31,8 @@ float getSxy(node*&, node*&, float*&);
 float getR(node*&, node*&, float*&);
 void makeGraph(graph*&, float*&);
 int getChainSize(node*&);
+void dfs(graph*&);
+void dfsVisit(graph*&, node*&);
 
 int main(int argc, char** argv)
 {
@@ -228,4 +234,36 @@ int getChainSize(node*& point)
       current = current->next;
     }
   return count-1;
+}
+
+//function to perform depth first search on graph
+void dfs(graph*& iceGraph)
+{
+  for(int i = 0; i < 3969; i++)
+    iceGraph->adjacencyList[i]->color = 0;
+
+  iceGraph->time = 0;
+  for(int i = 0; i < 3969; i++)
+    {
+      if(iceGraph->adjacencyList[i]->color == 0 && iceGraph->adjacencyList[i]->data[0] != 168)
+	dfsVisit(iceGraph, iceGraph->adjacencyList[i]);
+    }
+}
+
+//utility function to go depth first for every node
+void dfsVisit(graph*& iceGraph, node*& point)
+{
+  iceGraph->time++;
+  point->discoveryTime = iceGraph->time;
+  point->color = 1;
+  node* current = point;
+  while(current != NULL)
+    {
+      current = current->next;
+      if(current->color == 0)
+	dfsVisit(iceGraph, current);
+    }
+  point->color = 2;
+  iceGraph->time++;
+  point->finishTime = iceGraph->time;
 }
