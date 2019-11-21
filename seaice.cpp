@@ -82,26 +82,8 @@ int main(int argc, char** argv)
 	} 
     }
 
-  //fills array of means
+  //fills array of means and make graph
   fillMeans(iceGraph, means);
-
-  int count = 0;
-  //finding R for all combos
-  /*
-  for(int i = 0; i < 3969; i++)
-    {
-      for(int j = 0; j < 3969; j++)
-	{
-	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168 && abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means)) > 0)
-	    {
-	      cout << abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means)) << endl;
-	      count ++;	
-	    }
-	}
-    }
-  cout << count << endl;
-  */
-
   makeGraph(iceGraph, means);
 
   int max = 0;
@@ -111,10 +93,9 @@ int main(int argc, char** argv)
       if(getChainSize(iceGraph->adjacencyList[i]) > max && iceGraph->adjacencyList[i]->data[0] != 168)
 	max = getChainSize(iceGraph->adjacencyList[i]);
     }
-  //cout << "Max degree: " << max << endl;
 
   int num;  
-  for(int i = 0; i < max; i++)
+  for(int i = 0; i <= max; i++)
     {
       num = 0;
       for(int j = 0; j < 3969; j++)
@@ -122,7 +103,10 @@ int main(int argc, char** argv)
 	  if(getChainSize(iceGraph->adjacencyList[j]) == i)
 	    num++;
 	}
-      cout << "Number with degree size " << i << ": " << num << endl;
+      cout << "Number with degree size " << i << ": " << num << "\t";
+      for(int k = 0; k < num/8; k++)
+	cout << "*";
+      cout << endl;
     }
   return 0;
 }
@@ -226,7 +210,7 @@ void makeGraph(graph*& iceGraph, float*& means)
 		  current->next = entry2;
 		  
 		  count++;
-		  cout << count << endl;
+		  //cout << count << endl;
 		}
 	    }
 	}
