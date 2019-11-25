@@ -26,12 +26,13 @@ struct graph
 
 //functions used
 void fillMeans(graph*&, float*&);
+void fillRList(graph*&, float*&);
 float getSxx(node*&, float*&);
 float getSxy(node*&, node*&, float*&);
 float getR(node*&, node*&, float*&);
 void makeGraph(graph*&, float*&);
 int getChainSize(node*&);
-void dfs(graph*&);
+int  dfs(graph*&);
 void dfsVisit(graph*&, node*&);
 
 int main(int argc, char** argv)
@@ -41,6 +42,7 @@ int main(int argc, char** argv)
   iceGraph->numVertices = 3969;
   iceGraph->adjacencyList = new node*[iceGraph->numVertices];
   float* means = new float[3969];
+  float* rList = new float[3969*3969];
 
   //declare arrays of data for all vertices
   for(int i = 0; i < iceGraph->numVertices; i++)
@@ -92,6 +94,7 @@ int main(int argc, char** argv)
   fillMeans(iceGraph, means);
   makeGraph(iceGraph, means);
 
+  //finds max degree
   int max = 0;
   for(int i = 0; i < 3969; i++)
     {
@@ -100,20 +103,29 @@ int main(int argc, char** argv)
 	max = getChainSize(iceGraph->adjacencyList[i]);
     }
 
+  //prints out histogram
+  cout << "Degree Distribution (Legend: * = 8 data points)" << endl << endl;
   int num;  
   for(int i = 0; i <= max; i++)
     {
       num = 0;
       for(int j = 0; j < 3969; j++)
 	{
-	  if(getChainSize(iceGraph->adjacencyList[j]) == i)
-	    num++;
+	  if(iceGraph->adjacencyList[j]->data[0] != 168)
+	    {
+	      if(getChainSize(iceGraph->adjacencyList[j]) == i)
+		num++;
+	    }
 	}
       cout << "Number with degree size " << i << ": " << num << "\t";
       for(int k = 0; k < num/8; k++)
 	cout << "*";
       cout << endl;
     }
+  cout << endl;
+
+  //connected components
+  cout << "Number of connected components: " << dfs(iceGraph) << endl;
   return 0;
 }
 
@@ -123,13 +135,6 @@ void fillMeans(graph*& iceGraph, float*& means)
   float sum;
   float mean = 0;
   int numIce = 0; //vertices that are not land
-
-  //determines how many vertices are actually ice
-  for(int i = 0; i < 3969; i++)
-    {
-      if(iceGraph->adjacencyList[i]->data[0] != 168)
-	numIce++;
-    }
 
   //fills array of means
   for(int i = 0; i < 3969; i++)
@@ -145,6 +150,17 @@ void fillMeans(graph*& iceGraph, float*& means)
 	  means[i] = mean;
 	}
     } 
+}
+
+void fillRList(graph*& iceGraph, float*& mean)
+{
+  int count = 0;
+  for(int i = 0; i < 3968; i++)
+    {
+      for(int j = i+1; j < 3969; j++)
+	count++;
+    }
+  cout << count << endl;
 }
 
 //returns Sxx or Syy
@@ -182,7 +198,7 @@ float getR(node*& point1, node*& point2, float*& means)
 //constructs graph with adjacency list representation
 void makeGraph(graph*& iceGraph, float*& means)
 {
-  float threshHold = 0.95;
+  float threshHold = 0.90;
   float R = 0;
   node* current = NULL;
   int count = 0;
@@ -236,18 +252,23 @@ int getChainSize(node*& point)
   return count-1;
 }
 
-//function to perform depth first search on graph
-void dfs(graph*& iceGraph)
+//returns number of connected componenets for graph
+int dfs(graph*& iceGraph)
 {
+  int count = 0;
   for(int i = 0; i < 3969; i++)
-    iceGraph->adjacencyList[i]->color = 0;
+    iceGraph->adjacencyList[i]->color = 0; //initalizing all nodes to white
 
   iceGraph->time = 0;
   for(int i = 0; i < 3969; i++)
     {
       if(iceGraph->adjacencyList[i]->color == 0 && iceGraph->adjacencyList[i]->data[0] != 168)
-	dfsVisit(iceGraph, iceGraph->adjacencyList[i]);
+	{
+	  dfsVisit(iceGraph, iceGraph->adjacencyList[i]);
+	  count++;
+	}
     }
+  return count;
 }
 
 //utility function to go depth first for every node
@@ -255,15 +276,23 @@ void dfsVisit(graph*& iceGraph, node*& point)
 {
   iceGraph->time++;
   point->discoveryTime = iceGraph->time;
-  point->color = 1;
-  node* current = point;
+  point->color = 1; //gray node
+  node* current = point->next;
+  /*
   while(current != NULL)
     {
-      current = current->next;
       if(current->color == 0)
-	dfsVisit(iceGraph, current);
+	dfsVisit(iceGraph, iceGraph->adjacencyList[current->vertex]);
+      current = current->next;
     }
-  point->color = 2;
+  */
+  for(int j = 1; j < getChainSize(current); j++)
+    {
+      if(current->color == 0)
+	dfsVisit(iceGraph, iceGraph->adjacencyList[current->vertex]);
+      current = current->next;
+    }
+  point->color = 2; //black node
   iceGraph->time++;
   point->finishTime = iceGraph->time;
 }
