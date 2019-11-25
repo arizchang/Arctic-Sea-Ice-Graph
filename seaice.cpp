@@ -156,6 +156,7 @@ void fillMeans(graph*& iceGraph, float*& means)
     } 
 }
 
+//fills an array of R values
 void fillRList(graph*& iceGraph, float*& rList, float*& means, float*& sxxList)
 {
   int count = 0;
@@ -172,6 +173,7 @@ void fillRList(graph*& iceGraph, float*& rList, float*& means, float*& sxxList)
     }
 }
 
+//fills an array of Sxx/Syy values
 void fillSxx(graph*& iceGraph, float*& sxxList, float*& means)
 {
   for(int i = 0; i < 3969; i++)
@@ -277,6 +279,8 @@ int dfs(graph*& iceGraph)
   for(int i = 0; i < 3969; i++)
     iceGraph->adjacencyList[i]->color = 0; //initalizing all nodes to white
 
+  //cout << "We good?" << endl;
+
   iceGraph->time = 0;
   for(int i = 0; i < 3969; i++)
     {
@@ -284,6 +288,7 @@ int dfs(graph*& iceGraph)
 	{
 	  dfsVisit(iceGraph, iceGraph->adjacencyList[i]);
 	  count++;
+	  //cout << "Do we get here?" << endl;
 	}
     }
   return count;
@@ -292,24 +297,20 @@ int dfs(graph*& iceGraph)
 //utility function to go depth first for every node
 void dfsVisit(graph*& iceGraph, node*& point)
 {
+  //cout << "Inside dfsVisit" << endl;
+  cout << "At node " << point->vertex << endl;
   iceGraph->time++;
   point->discoveryTime = iceGraph->time;
   point->color = 1; //gray node
   node* current = point->next;
-  /*
+  
   while(current != NULL)
     {
-      if(current->color == 0)
+      if(iceGraph->adjacencyList[current->vertex]->color == 0)
 	dfsVisit(iceGraph, iceGraph->adjacencyList[current->vertex]);
       current = current->next;
     }
-  */
-  for(int j = 1; j < getChainSize(current); j++)
-    {
-      if(current->color == 0)
-	dfsVisit(iceGraph, iceGraph->adjacencyList[current->vertex]);
-      current = current->next;
-    }
+ 
   point->color = 2; //black node
   iceGraph->time++;
   point->finishTime = iceGraph->time;
