@@ -26,11 +26,12 @@ struct graph
 
 //functions used
 void fillMeans(graph*&, float*&);
-void fillRList(graph*&, float*&);
+void fillRList(graph*&, float*&, float*&, float*&);
+void fillSxx(graph*&, float*&, float*&);
 float getSxx(node*&, float*&);
 float getSxy(node*&, node*&, float*&);
-float getR(node*&, node*&, float*&);
-void makeGraph(graph*&, float*&);
+float getR(node*&, node*&, float*&, float*&);
+void makeGraph(graph*&, float*&, float*&);
 int getChainSize(node*&);
 int  dfs(graph*&);
 void dfsVisit(graph*&, node*&);
@@ -42,7 +43,8 @@ int main(int argc, char** argv)
   iceGraph->numVertices = 3969;
   iceGraph->adjacencyList = new node*[iceGraph->numVertices];
   float* means = new float[3969];
-  float* rList = new float[3969*3969];
+  float* rList = new float[7874496];
+  float* sxxList = new float[3969];
 
   //declare arrays of data for all vertices
   for(int i = 0; i < iceGraph->numVertices; i++)
@@ -92,7 +94,9 @@ int main(int argc, char** argv)
 
   //fills array of means and make graph
   fillMeans(iceGraph, means);
-  makeGraph(iceGraph, means);
+  fillSxx(iceGraph, sxxList, means);
+  fillRList(iceGraph, rList, means, sxxList);
+  makeGraph(iceGraph, rList, means);
 
   //finds max degree
   int max = 0;
@@ -152,15 +156,28 @@ void fillMeans(graph*& iceGraph, float*& means)
     } 
 }
 
-void fillRList(graph*& iceGraph, float*& mean)
+void fillRList(graph*& iceGraph, float*& rList, float*& means, float*& sxxList)
 {
   int count = 0;
   for(int i = 0; i < 3968; i++)
     {
       for(int j = i+1; j < 3969; j++)
-	count++;
+	{
+	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168)
+	    {
+	      rList[count] = abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means, sxxList));
+	      count++;
+	    }
+	}
     }
-  cout << count << endl;
+}
+
+void fillSxx(graph*& iceGraph, float*& sxxList, float*& means)
+{
+  for(int i = 0; i < 3969; i++)
+    {
+      sxxList[i] = getSxx(iceGraph->adjacencyList[i], means);
+    }
 }
 
 //returns Sxx or Syy
@@ -186,19 +203,21 @@ float getSxy(node*& point1, node*& point2, float*& means)
 }
 
 //returns R
-float getR(node*& point1, node*& point2, float*& means)
+float getR(node*& point1, node*& point2, float*& means, float*& sxxList)
 {
-  float Sxx = getSxx(point1, means);
-  float Syy = getSxx(point2, means);
+  //float Sxx = getSxx(point1, means);
+  //float Syy = getSxx(point2, means);
+  float Sxx = sxxList[point1->vertex];
+  float Syy = sxxList[point2->vertex];
   float Sxy = getSxy(point1, point2, means);
   float r = Sxy/(sqrt(Sxx*Syy));
   return r;
 }
 
 //constructs graph with adjacency list representation
-void makeGraph(graph*& iceGraph, float*& means)
+void makeGraph(graph*& iceGraph, float*& rList, float*& means)
 {
-  float threshHold = 0.90;
+  float threshHold = 0.925;
   float R = 0;
   node* current = NULL;
   int count = 0;
@@ -209,7 +228,9 @@ void makeGraph(graph*& iceGraph, float*& means)
 	{
 	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168)
 	    {
-	      R = abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means));
+	      //R = abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means));
+	      R = rList[count];
+	      count++;
 	      if(R >= threshHold)
 		{
 		  current = iceGraph->adjacencyList[i];
@@ -230,9 +251,6 @@ void makeGraph(graph*& iceGraph, float*& means)
 		  while(current->next !=  NULL)
 		    current = current->next;
 		  current->next = entry2;
-		  
-		  count++;
-		  //cout << count << endl;
 		}
 	    }
 	}
