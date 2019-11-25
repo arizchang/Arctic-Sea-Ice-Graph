@@ -34,7 +34,7 @@ float getR(node*&, node*&, float*&, float*&);
 void makeGraph(graph*&, float*&, float*&);
 int getChainSize(node*&);
 int  dfs(graph*&);
-void dfsVisit(graph*&, node*&);
+void dfsVisit(graph*&, node*&, int&);
 
 int main(int argc, char** argv)
 {
@@ -219,7 +219,7 @@ float getR(node*& point1, node*& point2, float*& means, float*& sxxList)
 //constructs graph with adjacency list representation
 void makeGraph(graph*& iceGraph, float*& rList, float*& means)
 {
-  float threshHold = 0.925;
+  float threshHold = 0.95;
   float R = 0;
   node* current = NULL;
   int count = 0;
@@ -276,6 +276,7 @@ int getChainSize(node*& point)
 int dfs(graph*& iceGraph)
 {
   int count = 0;
+  int compSize = 0;
   for(int i = 0; i < 3969; i++)
     iceGraph->adjacencyList[i]->color = 0; //initalizing all nodes to white
 
@@ -286,19 +287,22 @@ int dfs(graph*& iceGraph)
     {
       if(iceGraph->adjacencyList[i]->color == 0 && iceGraph->adjacencyList[i]->data[0] != 168)
 	{
-	  dfsVisit(iceGraph, iceGraph->adjacencyList[i]);
+	  compSize = 0;
+	  dfsVisit(iceGraph, iceGraph->adjacencyList[i], compSize);
 	  count++;
-	  //cout << "Do we get here?" << endl;
+	  cout << "Component " << count << " size: " << compSize << "\t";
+	  if(count%3 == 0)
+	    cout << endl;
 	}
     }
+  cout << endl;
   return count;
 }
 
 //utility function to go depth first for every node
-void dfsVisit(graph*& iceGraph, node*& point)
+void dfsVisit(graph*& iceGraph, node*& point, int& compSize)
 {
-  //cout << "Inside dfsVisit" << endl;
-  cout << "At node " << point->vertex << endl;
+  compSize++;
   iceGraph->time++;
   point->discoveryTime = iceGraph->time;
   point->color = 1; //gray node
@@ -307,7 +311,7 @@ void dfsVisit(graph*& iceGraph, node*& point)
   while(current != NULL)
     {
       if(iceGraph->adjacencyList[current->vertex]->color == 0)
-	dfsVisit(iceGraph, iceGraph->adjacencyList[current->vertex]);
+	dfsVisit(iceGraph, iceGraph->adjacencyList[current->vertex], compSize);
       current = current->next;
     }
  
