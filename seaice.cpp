@@ -77,7 +77,8 @@ int main(int argc, char** argv)
 	  else
 	    weekStr = to_string(j);
 	  file = to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
-	  //cout << file << endl;
+	  //file = "./code/CSE310_project_subregion/" + to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
+	  
 	  //opening and reading binary files info arrays of sea ice concentration
 	  ifstream inputFile(file, ios::in | ios::binary);
 	  float dataIn = 0;
