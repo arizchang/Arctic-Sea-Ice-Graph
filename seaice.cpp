@@ -31,10 +31,11 @@ void fillSxx(graph*&, float*&, float*&);
 float getSxx(node*&, float*&);
 float getSxy(node*&, node*&, float*&);
 float getR(node*&, node*&, float*&, float*&);
-void makeGraph(graph*&, float*&, float*&);
+void makeGraph(graph*&, float*&, float*&, float);
 int getChainSize(node*&);
 int  dfs(graph*&);
 void dfsVisit(graph*&, node*&, int&);
+void deleteList(graph*&);
 
 int main(int argc, char** argv)
 {
@@ -96,40 +97,52 @@ int main(int argc, char** argv)
   fillMeans(iceGraph, means);
   fillSxx(iceGraph, sxxList, means);
   fillRList(iceGraph, rList, means, sxxList);
-  makeGraph(iceGraph, rList, means);
-
-  //finds max degree
-  int max = 0;
-  for(int i = 0; i < 3969; i++)
+  
+  //beginning of loop for each threshold
+  float threshHold = .9;
+  while(threshHold <=.95)
     {
-      //cout << getChainSize(iceGraph->adjacencyList[i]) << endl;
-      if(getChainSize(iceGraph->adjacencyList[i]) > max && iceGraph->adjacencyList[i]->data[0] != 168)
-	max = getChainSize(iceGraph->adjacencyList[i]);
-    }
+      makeGraph(iceGraph, rList, means, threshHold);
 
-  //prints out histogram
-  cout << "Degree Distribution (Legend: * = 8 data points)" << endl << endl;
-  int num;  
-  for(int i = 0; i <= max; i++)
-    {
-      num = 0;
-      for(int j = 0; j < 3969; j++)
+      //finds max degree
+      int max = 0;
+      for(int i = 0; i < 3969; i++)
 	{
-	  if(iceGraph->adjacencyList[j]->data[0] != 168)
-	    {
-	      if(getChainSize(iceGraph->adjacencyList[j]) == i)
-		num++;
-	    }
+	  //cout << getChainSize(iceGraph->adjacencyList[i]) << endl;
+	  if(getChainSize(iceGraph->adjacencyList[i]) > max && iceGraph->adjacencyList[i]->data[0] != 168)
+	    max = getChainSize(iceGraph->adjacencyList[i]);
 	}
-      cout << "Number with degree size " << i << ": " << num << "\t";
-      for(int k = 0; k < num/8; k++)
-	cout << "*";
-      cout << endl;
-    }
-  cout << endl;
 
-  //connected components
-  cout << "Number of connected components: " << dfs(iceGraph) << endl;
+      //prints out histogram
+      cout << "\nDegree Distribution at threshold " << threshHold << " (Legend: * = 8 data points)" << endl << endl;
+      int num;  
+      for(int i = 0; i <= max; i++)
+	{
+	  num = 0;
+	  for(int j = 0; j < 3969; j++)
+	    {
+	      if(iceGraph->adjacencyList[j]->data[0] != 168)
+		{
+		  if(getChainSize(iceGraph->adjacencyList[j]) == i)
+		    num++;
+		}
+	    }
+	  cout << "Number with degree size " << i << ": " << num << "\t";
+	  for(int k = 0; k < num/8; k++)
+	    cout << "*";
+	  cout << endl;
+	}
+      cout << endl;
+
+      //connected components
+      cout << "Connected Components for threshold " << threshHold << endl;
+      cout << "Number of connected components: " << dfs(iceGraph) << endl;
+
+      //deallocating memory from the adjacency list
+      deleteList(iceGraph);
+
+      threshHold += .025;
+    }
   return 0;
 }
 
@@ -217,9 +230,8 @@ float getR(node*& point1, node*& point2, float*& means, float*& sxxList)
 }
 
 //constructs graph with adjacency list representation
-void makeGraph(graph*& iceGraph, float*& rList, float*& means)
+void makeGraph(graph*& iceGraph, float*& rList, float*& means, float threshHold)
 {
-  float threshHold = 0.95;
   float R = 0;
   node* current = NULL;
   int count = 0;
@@ -236,7 +248,7 @@ void makeGraph(graph*& iceGraph, float*& rList, float*& means)
 	      if(R >= threshHold)
 		{
 		  current = iceGraph->adjacencyList[i];
-	      
+		        
 		  //making copy of node to be inserted
 		  node* entry = new node;
 		  entry->vertex = iceGraph->adjacencyList[j]->vertex;
@@ -318,4 +330,21 @@ void dfsVisit(graph*& iceGraph, node*& point, int& compSize)
   point->color = 2; //black node
   iceGraph->time++;
   point->finishTime = iceGraph->time;
+}
+
+void deleteList(graph*& iceGraph)
+{
+  node* current;
+  node* next;
+  for(int i = 0; i < 3969; i++)
+    {
+      current = iceGraph->adjacencyList[i]->next;
+      while(current != NULL)
+	{
+	  next = current->next;
+	  delete(current);
+	  current = next;
+	}
+      iceGraph->adjacencyList[i]->next = NULL;
+    }
 }
