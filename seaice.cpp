@@ -372,12 +372,12 @@ int getNumEdgesBetweenNeighbors(graph* iceGraph, node* point)
   node* current = point->next;
   node* current2;
   int count = 0;
-
+  cout << "Neighbors: ";
   //fills vector with edges for a vertex
   while(current != NULL)
     {
       temp.push_back(current->vertex);
-      //cout << current->vertex << "\t";
+      cout << current->vertex << "\t";
       current = current->next;
     }
 
@@ -387,11 +387,20 @@ int getNumEdgesBetweenNeighbors(graph* iceGraph, node* point)
       current2 = iceGraph->adjacencyList[temp[i]]->next;
       while(current2 != NULL)
 	{
-	  cout << current2->vertex << " and " << temp[i] << "\t";
+	  /*
 	  if(current2->vertex == temp[i])
 	    {
 	      count++;
 	      cout << current2->vertex << " and " << temp[i] << "\t";
+	    }
+	  */
+	  for(int j = 0; j < temp.size(); j++)
+	    {
+	      if(current2->vertex == temp[j])
+		{
+		  count++;
+		  cout << current2->vertex << " and " << temp[j] << "\t";
+		}
 	    }
 	  current2 = current2->next;
 	}
