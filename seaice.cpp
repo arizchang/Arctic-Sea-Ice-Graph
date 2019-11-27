@@ -38,7 +38,7 @@ int getChainSize(node*&);
 int  dfs(graph*&);
 void dfsVisit(graph*&, node*&, int&);
 void deleteList(graph*&);
-void setCC(graph*, node*); //clustering coefficient
+void setCC(graph*&, node*&); //clustering coefficient
 int getNumEdgesBetweenNeighbors(graph*, node*);
 
 int main(int argc, char** argv)
@@ -143,14 +143,24 @@ int main(int argc, char** argv)
       cout << "Connected Components for threshold " << threshHold << endl;
       cout << "Number of connected components: " << dfs(iceGraph) << endl;
 
-      //clustering coefficient
-      for(int i = 18; i < 19; i++)
+      //calculating and setting clustering coefficients and mean clustering co
+      float totalCC = 0;
+      float meanCC;
+      int ccCount = 0;
+      for(int i = 0; i < 3969; i++)
 	{
 	  if(iceGraph->adjacencyList[i]->data[0] != 168)
-	    cout << getNumEdgesBetweenNeighbors(iceGraph, iceGraph->adjacencyList[i]) << " ";
-	  if(i%20 == 0)
-	    cout << endl;
+	    {
+	      setCC(iceGraph, iceGraph->adjacencyList[i]);
+	      totalCC += iceGraph->adjacencyList[i]->clusteringCo;
+	      ccCount++;
+	      //cout << iceGraph->adjacencyList[i]->clusteringCo << " ";
+	    }
+	  //if(i%20 == 0)
+	  //cout << endl;
 	}
+      meanCC = totalCC/ccCount;
+      cout << "Mean clustering coefficient: " << meanCC << endl;
 
       //deallocating memory from the adjacency list
       deleteList(iceGraph);
@@ -359,27 +369,26 @@ void deleteList(graph*& iceGraph)
     }
 }
 
-//sets the clustering coefficient
-void setCC(graph* iceGraph, node* point)
-{
-
-}
-
 //returns the number of edges between the neighbors of a vertex
-int getNumEdgesBetweenNeighbors(graph* iceGraph, node* point)
+void setCC(graph*& iceGraph, node*& point)
 {
   vector<int> temp;
   node* current = point->next;
   node* current2;
   int count = 0;
-  cout << "Neighbors: ";
+  int numNeighbors;
+  int numEdgesBetweenNeighbors = 0;
+  float clusteringCo = 0;
+  //cout << "Neighbors: ";
   //fills vector with edges for a vertex
   while(current != NULL)
     {
       temp.push_back(current->vertex);
-      cout << current->vertex << "\t";
+      //cout << current->vertex << "\t";
       current = current->next;
     }
+
+  numNeighbors = temp.size();
 
   //iterating to see neighbors have edges between them
   for(int i = 0; i < temp.size(); i++)
@@ -387,24 +396,23 @@ int getNumEdgesBetweenNeighbors(graph* iceGraph, node* point)
       current2 = iceGraph->adjacencyList[temp[i]]->next;
       while(current2 != NULL)
 	{
-	  /*
-	  if(current2->vertex == temp[i])
-	    {
-	      count++;
-	      cout << current2->vertex << " and " << temp[i] << "\t";
-	    }
-	  */
 	  for(int j = 0; j < temp.size(); j++)
 	    {
 	      if(current2->vertex == temp[j])
 		{
 		  count++;
-		  cout << current2->vertex << " and " << temp[j] << "\t";
+		  //cout << current2->vertex << " and " << temp[j] << "\t";
 		}
 	    }
 	  current2 = current2->next;
 	}
     }
+  numEdgesBetweenNeighbors = count/2;
 
-  return count/2;
+  clusteringCo = (float)(2*numEdgesBetweenNeighbors)/(float)(numNeighbors * (numNeighbors-1));
+
+  if(numNeighbors <= 1)
+    clusteringCo = 0;
+
+  point->clusteringCo = clusteringCo;
 }
