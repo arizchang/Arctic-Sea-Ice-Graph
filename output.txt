@@ -1,0 +1,302 @@
+
+Degree Distribution at threshold 0.9 (Legend: * = 8 data points)
+
+Number with degree size 0: 14	*
+Number with degree size 1: 25	***
+Number with degree size 2: 28	***
+Number with degree size 3: 25	***
+Number with degree size 4: 40	*****
+Number with degree size 5: 49	******
+Number with degree size 6: 48	******
+Number with degree size 7: 56	*******
+Number with degree size 8: 74	*********
+Number with degree size 9: 52	******
+Number with degree size 10: 87	**********
+Number with degree size 11: 67	********
+Number with degree size 12: 64	********
+Number with degree size 13: 80	**********
+Number with degree size 14: 65	********
+Number with degree size 15: 49	******
+Number with degree size 16: 52	******
+Number with degree size 17: 61	*******
+Number with degree size 18: 91	***********
+Number with degree size 19: 80	**********
+Number with degree size 20: 121	***************
+Number with degree size 21: 117	**************
+Number with degree size 22: 70	********
+Number with degree size 23: 73	*********
+Number with degree size 24: 68	********
+Number with degree size 25: 68	********
+Number with degree size 26: 59	*******
+Number with degree size 27: 72	*********
+Number with degree size 28: 67	********
+Number with degree size 29: 73	*********
+Number with degree size 30: 67	********
+Number with degree size 31: 65	********
+Number with degree size 32: 77	*********
+Number with degree size 33: 67	********
+Number with degree size 34: 51	******
+Number with degree size 35: 65	********
+Number with degree size 36: 51	******
+Number with degree size 37: 50	******
+Number with degree size 38: 55	******
+Number with degree size 39: 49	******
+Number with degree size 40: 50	******
+Number with degree size 41: 37	****
+Number with degree size 42: 52	******
+Number with degree size 43: 37	****
+Number with degree size 44: 34	****
+Number with degree size 45: 36	****
+Number with degree size 46: 27	***
+Number with degree size 47: 25	***
+Number with degree size 48: 20	**
+Number with degree size 49: 14	*
+Number with degree size 50: 22	**
+Number with degree size 51: 12	*
+Number with degree size 52: 9	*
+Number with degree size 53: 12	*
+Number with degree size 54: 12	*
+Number with degree size 55: 14	*
+Number with degree size 56: 10	*
+Number with degree size 57: 10	*
+Number with degree size 58: 7	
+Number with degree size 59: 7	
+Number with degree size 60: 9	*
+Number with degree size 61: 6	
+Number with degree size 62: 11	*
+Number with degree size 63: 11	*
+Number with degree size 64: 8	*
+Number with degree size 65: 7	
+Number with degree size 66: 7	
+Number with degree size 67: 6	
+Number with degree size 68: 6	
+Number with degree size 69: 6	
+Number with degree size 70: 8	*
+Number with degree size 71: 5	
+Number with degree size 72: 11	*
+Number with degree size 73: 6	
+Number with degree size 74: 6	
+Number with degree size 75: 9	*
+Number with degree size 76: 7	
+Number with degree size 77: 2	
+Number with degree size 78: 9	*
+Number with degree size 79: 6	
+Number with degree size 80: 9	*
+Number with degree size 81: 6	
+Number with degree size 82: 10	*
+Number with degree size 83: 9	*
+Number with degree size 84: 9	*
+Number with degree size 85: 5	
+Number with degree size 86: 3	
+Number with degree size 87: 7	
+Number with degree size 88: 3	
+Number with degree size 89: 4	
+Number with degree size 90: 2	
+Number with degree size 91: 3	
+Number with degree size 92: 3	
+Number with degree size 93: 3	
+Number with degree size 94: 2	
+Number with degree size 95: 3	
+Number with degree size 96: 2	
+Number with degree size 97: 6	
+Number with degree size 98: 4	
+Number with degree size 99: 1	
+Number with degree size 100: 1	
+Number with degree size 101: 3	
+Number with degree size 102: 1	
+Number with degree size 103: 1	
+Number with degree size 104: 1	
+
+Connected Components for threshold 0.9
+Component 1 size: 3151	Component 2 size: 1	Component 3 size: 2	
+Component 4 size: 3	Component 5 size: 2	Component 6 size: 2	
+Component 7 size: 3	Component 8 size: 1	Component 9 size: 1	
+Component 10 size: 1	Component 11 size: 1	Component 12 size: 1	
+Component 13 size: 1	Component 14 size: 1	Component 15 size: 6	
+Component 16 size: 1	Component 17 size: 1	Component 18 size: 1	
+Component 19 size: 1	Component 20 size: 1	Component 21 size: 1	
+Component 22 size: 3	
+Number of connected components: 22
+
+Degree Distribution at threshold 0.925 (Legend: * = 8 data points)
+
+Number with degree size 0: 31	***
+Number with degree size 1: 45	*****
+Number with degree size 2: 44	*****
+Number with degree size 3: 57	*******
+Number with degree size 4: 69	********
+Number with degree size 5: 81	**********
+Number with degree size 6: 90	***********
+Number with degree size 7: 115	**************
+Number with degree size 8: 118	**************
+Number with degree size 9: 147	******************
+Number with degree size 10: 109	*************
+Number with degree size 11: 88	***********
+Number with degree size 12: 89	***********
+Number with degree size 13: 110	*************
+Number with degree size 14: 90	***********
+Number with degree size 15: 121	***************
+Number with degree size 16: 99	************
+Number with degree size 17: 104	*************
+Number with degree size 18: 104	*************
+Number with degree size 19: 120	***************
+Number with degree size 20: 156	*******************
+Number with degree size 21: 105	*************
+Number with degree size 22: 102	************
+Number with degree size 23: 95	***********
+Number with degree size 24: 77	*********
+Number with degree size 25: 72	*********
+Number with degree size 26: 68	********
+Number with degree size 27: 61	*******
+Number with degree size 28: 62	*******
+Number with degree size 29: 72	*********
+Number with degree size 30: 61	*******
+Number with degree size 31: 41	*****
+Number with degree size 32: 33	****
+Number with degree size 33: 19	**
+Number with degree size 34: 19	**
+Number with degree size 35: 28	***
+Number with degree size 36: 11	*
+Number with degree size 37: 15	*
+Number with degree size 38: 16	**
+Number with degree size 39: 17	**
+Number with degree size 40: 9	*
+Number with degree size 41: 11	*
+Number with degree size 42: 7	
+Number with degree size 43: 12	*
+Number with degree size 44: 14	*
+Number with degree size 45: 7	
+Number with degree size 46: 6	
+Number with degree size 47: 9	*
+Number with degree size 48: 6	
+Number with degree size 49: 10	*
+Number with degree size 50: 18	**
+Number with degree size 51: 6	
+Number with degree size 52: 8	*
+Number with degree size 53: 9	*
+Number with degree size 54: 9	*
+Number with degree size 55: 13	*
+Number with degree size 56: 13	*
+Number with degree size 57: 12	*
+Number with degree size 58: 9	*
+Number with degree size 59: 6	
+Number with degree size 60: 5	
+Number with degree size 61: 5	
+Number with degree size 62: 3	
+Number with degree size 63: 5	
+Number with degree size 64: 3	
+Number with degree size 65: 2	
+Number with degree size 66: 2	
+Number with degree size 67: 3	
+Number with degree size 68: 2	
+Number with degree size 69: 0	
+Number with degree size 70: 0	
+Number with degree size 71: 1	
+
+Connected Components for threshold 0.925
+Component 1 size: 3123	Component 2 size: 1	Component 3 size: 1	
+Component 4 size: 1	Component 5 size: 2	Component 6 size: 3	
+Component 7 size: 1	Component 8 size: 4	Component 9 size: 2	
+Component 10 size: 1	Component 11 size: 1	Component 12 size: 1	
+Component 13 size: 2	Component 14 size: 1	Component 15 size: 1	
+Component 16 size: 1	Component 17 size: 1	Component 18 size: 4	
+Component 19 size: 1	Component 20 size: 1	Component 21 size: 1	
+Component 22 size: 1	Component 23 size: 1	Component 24 size: 1	
+Component 25 size: 1	Component 26 size: 1	Component 27 size: 1	
+Component 28 size: 1	Component 29 size: 1	Component 30 size: 1	
+Component 31 size: 1	Component 32 size: 3	Component 33 size: 4	
+Component 34 size: 2	Component 35 size: 1	Component 36 size: 1	
+Component 37 size: 3	Component 38 size: 1	Component 39 size: 1	
+Component 40 size: 1	Component 41 size: 1	Component 42 size: 3	
+Component 43 size: 1	
+Number of connected components: 43
+
+Degree Distribution at threshold 0.95 (Legend: * = 8 data points)
+
+Number with degree size 0: 86	**********
+Number with degree size 1: 110	*************
+Number with degree size 2: 100	************
+Number with degree size 3: 105	*************
+Number with degree size 4: 147	******************
+Number with degree size 5: 177	**********************
+Number with degree size 6: 126	***************
+Number with degree size 7: 169	*********************
+Number with degree size 8: 445	*******************************************************
+Number with degree size 9: 204	*************************
+Number with degree size 10: 185	***********************
+Number with degree size 11: 125	***************
+Number with degree size 12: 170	*********************
+Number with degree size 13: 164	********************
+Number with degree size 14: 122	***************
+Number with degree size 15: 96	************
+Number with degree size 16: 88	***********
+Number with degree size 17: 84	**********
+Number with degree size 18: 66	********
+Number with degree size 19: 69	********
+Number with degree size 20: 62	*******
+Number with degree size 21: 41	*****
+Number with degree size 22: 20	**
+Number with degree size 23: 18	**
+Number with degree size 24: 17	**
+Number with degree size 25: 19	**
+Number with degree size 26: 21	**
+Number with degree size 27: 15	*
+Number with degree size 28: 17	**
+Number with degree size 29: 13	*
+Number with degree size 30: 10	*
+Number with degree size 31: 23	**
+Number with degree size 32: 9	*
+Number with degree size 33: 16	**
+Number with degree size 34: 13	*
+Number with degree size 35: 12	*
+Number with degree size 36: 10	*
+Number with degree size 37: 5	
+Number with degree size 38: 3	
+Number with degree size 39: 0	
+Number with degree size 40: 2	
+Number with degree size 41: 1	
+Number with degree size 42: 1	
+
+Connected Components for threshold 0.95
+Component 1 size: 2888	Component 2 size: 1	Component 3 size: 1	
+Component 4 size: 1	Component 5 size: 3	Component 6 size: 3	
+Component 7 size: 1	Component 8 size: 1	Component 9 size: 1	
+Component 10 size: 1	Component 11 size: 1	Component 12 size: 2	
+Component 13 size: 1	Component 14 size: 1	Component 15 size: 1	
+Component 16 size: 2	Component 17 size: 1	Component 18 size: 1	
+Component 19 size: 1	Component 20 size: 1	Component 21 size: 1	
+Component 22 size: 1	Component 23 size: 88	Component 24 size: 1	
+Component 25 size: 1	Component 26 size: 1	Component 27 size: 6	
+Component 28 size: 2	Component 29 size: 2	Component 30 size: 1	
+Component 31 size: 1	Component 32 size: 2	Component 33 size: 1	
+Component 34 size: 1	Component 35 size: 1	Component 36 size: 1	
+Component 37 size: 1	Component 38 size: 1	Component 39 size: 1	
+Component 40 size: 1	Component 41 size: 1	Component 42 size: 1	
+Component 43 size: 1	Component 44 size: 4	Component 45 size: 4	
+Component 46 size: 3	Component 47 size: 1	Component 48 size: 7	
+Component 49 size: 2	Component 50 size: 1	Component 51 size: 1	
+Component 52 size: 4	Component 53 size: 1	Component 54 size: 1	
+Component 55 size: 2	Component 56 size: 1	Component 57 size: 1	
+Component 58 size: 3	Component 59 size: 1	Component 60 size: 3	
+Component 61 size: 1	Component 62 size: 30	Component 63 size: 1	
+Component 64 size: 1	Component 65 size: 1	Component 66 size: 1	
+Component 67 size: 3	Component 68 size: 2	Component 69 size: 2	
+Component 70 size: 1	Component 71 size: 1	Component 72 size: 1	
+Component 73 size: 3	Component 74 size: 1	Component 75 size: 1	
+Component 76 size: 1	Component 77 size: 1	Component 78 size: 1	
+Component 79 size: 4	Component 80 size: 1	Component 81 size: 1	
+Component 82 size: 1	Component 83 size: 1	Component 84 size: 1	
+Component 85 size: 1	Component 86 size: 1	Component 87 size: 1	
+Component 88 size: 1	Component 89 size: 1	Component 90 size: 2	
+Component 91 size: 3	Component 92 size: 1	Component 93 size: 1	
+Component 94 size: 1	Component 95 size: 1	Component 96 size: 1	
+Component 97 size: 2	Component 98 size: 1	Component 99 size: 5	
+Component 100 size: 2	Component 101 size: 1	Component 102 size: 1	
+Component 103 size: 1	Component 104 size: 2	Component 105 size: 1	
+Component 106 size: 2	Component 107 size: 1	Component 108 size: 1	
+Component 109 size: 1	Component 110 size: 2	Component 111 size: 1	
+Component 112 size: 1	Component 113 size: 1	Component 114 size: 1	
+Component 115 size: 2	Component 116 size: 1	Component 117 size: 2	
+Component 118 size: 1	Component 119 size: 1	Component 120 size: 1	
+Component 121 size: 1	Component 122 size: 2	
+Number of connected components: 122

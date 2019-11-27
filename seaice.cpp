@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ struct node
   int color; //0 is white, 1 is gray, 2 is black
   int discoveryTime;
   int finishTime;
+  float clusteringCo;
   struct node* next;
 };
 
@@ -36,6 +38,8 @@ int getChainSize(node*&);
 int  dfs(graph*&);
 void dfsVisit(graph*&, node*&, int&);
 void deleteList(graph*&);
+void setCC(graph*, node*); //clustering coefficient
+int getNumEdgesBetweenNeighbors(graph*, node*);
 
 int main(int argc, char** argv)
 {
@@ -100,7 +104,7 @@ int main(int argc, char** argv)
   fillRList(iceGraph, rList, means, sxxList);
   
   //beginning of loop for each threshold
-  float threshHold = .9;
+  float threshHold = .95;
   while(threshHold <=.95)
     {
       makeGraph(iceGraph, rList, means, threshHold);
@@ -138,6 +142,15 @@ int main(int argc, char** argv)
       //connected components
       cout << "Connected Components for threshold " << threshHold << endl;
       cout << "Number of connected components: " << dfs(iceGraph) << endl;
+
+      //clustering coefficient
+      for(int i = 18; i < 19; i++)
+	{
+	  if(iceGraph->adjacencyList[i]->data[0] != 168)
+	    cout << getNumEdgesBetweenNeighbors(iceGraph, iceGraph->adjacencyList[i]) << " ";
+	  if(i%20 == 0)
+	    cout << endl;
+	}
 
       //deallocating memory from the adjacency list
       deleteList(iceGraph);
@@ -221,8 +234,6 @@ float getSxy(node*& point1, node*& point2, float*& means)
 //returns R
 float getR(node*& point1, node*& point2, float*& means, float*& sxxList)
 {
-  //float Sxx = getSxx(point1, means);
-  //float Syy = getSxx(point2, means);
   float Sxx = sxxList[point1->vertex];
   float Syy = sxxList[point2->vertex];
   float Sxy = getSxy(point1, point2, means);
@@ -243,7 +254,6 @@ void makeGraph(graph*& iceGraph, float*& rList, float*& means, float threshHold)
 	{
 	  if(iceGraph->adjacencyList[i]->data[0] != 168 && iceGraph->adjacencyList[j]->data[0] != 168)
 	    {
-	      //R = abs(getR(iceGraph->adjacencyList[i], iceGraph->adjacencyList[j], means));
 	      R = rList[count];
 	      count++;
 	      if(R >= threshHold)
@@ -293,8 +303,6 @@ int dfs(graph*& iceGraph)
   for(int i = 0; i < 3969; i++)
     iceGraph->adjacencyList[i]->color = 0; //initalizing all nodes to white
 
-  //cout << "We good?" << endl;
-
   iceGraph->time = 0;
   for(int i = 0; i < 3969; i++)
     {
@@ -333,6 +341,7 @@ void dfsVisit(graph*& iceGraph, node*& point, int& compSize)
   point->finishTime = iceGraph->time;
 }
 
+//deletes linked nodes within adjacency list
 void deleteList(graph*& iceGraph)
 {
   node* current;
@@ -348,4 +357,45 @@ void deleteList(graph*& iceGraph)
 	}
       iceGraph->adjacencyList[i]->next = NULL;
     }
+}
+
+//sets the clustering coefficient
+void setCC(graph* iceGraph, node* point)
+{
+
+}
+
+//returns the number of edges between the neighbors of a vertex
+int getNumEdgesBetweenNeighbors(graph* iceGraph, node* point)
+{
+  vector<int> temp;
+  node* current = point->next;
+  node* current2;
+  int count = 0;
+
+  //fills vector with edges for a vertex
+  while(current != NULL)
+    {
+      temp.push_back(current->vertex);
+      //cout << current->vertex << "\t";
+      current = current->next;
+    }
+
+  //iterating to see neighbors have edges between them
+  for(int i = 0; i < temp.size(); i++)
+    {
+      current2 = iceGraph->adjacencyList[temp[i]]->next;
+      while(current2 != NULL)
+	{
+	  cout << current2->vertex << " and " << temp[i] << "\t";
+	  if(current2->vertex == temp[i])
+	    {
+	      count++;
+	      cout << current2->vertex << " and " << temp[i] << "\t";
+	    }
+	  current2 = current2->next;
+	}
+    }
+
+  return count/2;
 }
