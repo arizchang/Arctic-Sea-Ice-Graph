@@ -41,7 +41,7 @@ void dfsVisit(graph*&, node*&, int&);
 void deleteList(graph*&);
 void setCC(graph*&, node*&); //clustering coefficient
 int getNumEdgesBetweenNeighbors(graph*, node*);
-void listToMatrix(int**, graph*);
+void listToMatrix(int**&, graph*);
 
 int main(int argc, char** argv)
 {
@@ -61,11 +61,6 @@ int main(int argc, char** argv)
       iceGraph->adjacencyList[i]->data = new float[832];
       iceGraph->adjacencyList[i]->next = NULL;
     }
-
-  //declare adjacency matrix
-  int** matrix = new int*[3969];
-  for(int i = 0; i < 3969; i++)
-    matrix[i] = new int[3969];
 
   string file = "";
   int year = 0;
@@ -114,6 +109,11 @@ int main(int argc, char** argv)
   float threshHold = .9;
   while(threshHold <=.95)
     {
+      //declare adjacency matrix
+      int** matrix = new int*[3969];
+      for(int i = 0; i < 3969; i++)
+	matrix[i] = new int[3969];
+
       makeGraph(iceGraph, rList, means, threshHold);
 
       //finds max degree
@@ -169,7 +169,9 @@ int main(int argc, char** argv)
       meanCC = totalCC/ccCount;
       cout << "Mean clustering coefficient: " << meanCC << endl;
 
-      //deallocating memory from the adjacency list
+      listToMatrix(matrix, iceGraph);
+      //deallocating memory from the adjacency list and matrix
+      delete(matrix);
       deleteList(iceGraph);
 
       threshHold += .025;
@@ -424,3 +426,32 @@ void setCC(graph*& iceGraph, node*& point)
   point->clusteringCo = clusteringCo;
 }
 
+//creates an adjacency matrix representation from an adjacency list
+void listToMatrix(int**& matrix, graph* iceGraph)
+{
+  node* current;
+
+  //initialize matrix to INT_MAX
+  for(int i = 0; i < 3969; i++)
+    {
+      for(int j = i; j < 3969; j++)
+	{
+	  matrix[i][j] = INT_MAX;
+	  matrix[j][i] = INT_MAX;
+	}
+    }
+
+  //copying values into matrix, 0 along diagonal, 1 if edge exists
+  for(int i = 0; i < 3969; i++)
+    {
+      current = iceGraph->adjacencyList[i];
+      while(current != NULL)
+	{
+	  if(i == current->vertex)
+	    matrix[i][current->vertex] = 0;
+	  else
+	    matrix[i][current->vertex] = 1;
+	  current = current->next;
+	}
+    }
+}
