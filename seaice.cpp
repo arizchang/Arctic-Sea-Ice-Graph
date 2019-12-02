@@ -3,6 +3,7 @@
 #include <string>
 #include <cmath>
 #include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -40,6 +41,7 @@ void dfsVisit(graph*&, node*&, int&);
 void deleteList(graph*&);
 void setCC(graph*&, node*&); //clustering coefficient
 int getNumEdgesBetweenNeighbors(graph*, node*);
+void listToMatrix(int**, graph*);
 
 int main(int argc, char** argv)
 {
@@ -59,6 +61,11 @@ int main(int argc, char** argv)
       iceGraph->adjacencyList[i]->data = new float[832];
       iceGraph->adjacencyList[i]->next = NULL;
     }
+
+  //declare adjacency matrix
+  int** matrix = new int*[3969];
+  for(int i = 0; i < 3969; i++)
+    matrix[i] = new int[3969];
 
   string file = "";
   int year = 0;
@@ -104,7 +111,7 @@ int main(int argc, char** argv)
   fillRList(iceGraph, rList, means, sxxList);
   
   //beginning of loop for each threshold
-  float threshHold = .95;
+  float threshHold = .9;
   while(threshHold <=.95)
     {
       makeGraph(iceGraph, rList, means, threshHold);
@@ -416,3 +423,4 @@ void setCC(graph*& iceGraph, node*& point)
 
   point->clusteringCo = clusteringCo;
 }
+
