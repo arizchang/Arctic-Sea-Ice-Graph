@@ -44,6 +44,8 @@ int getNumEdgesBetweenNeighbors(graph*, node*);
 void listToMatrix(int**&, graph*);
 int** floydWarshall(int**);
 float characteristicPathLength(int**);
+float randomClusteringCo(graph*);
+float meanVertexDegree(graph*);
 
 int main(int argc, char** argv)
 {
@@ -170,10 +172,11 @@ int main(int argc, char** argv)
 	}
       meanCC = totalCC/ccCount;
       cout << "Mean clustering coefficient: " << meanCC << endl;
+      cout << "Random clustering co: " << randomClusteringCo(iceGraph) << endl;
 
-      listToMatrix(matrix, iceGraph);
-      float pathLength = characteristicPathLength(matrix);
-      cout << "The characteristic path length is: " << pathLength << endl;
+      //listToMatrix(matrix, iceGraph);
+      //float pathLength = characteristicPathLength(matrix);
+      //cout << "The characteristic path length is: " << pathLength << endl;
       //deallocating memory from the adjacency list and matrix
       delete(matrix);
       deleteList(iceGraph);
@@ -498,4 +501,26 @@ float characteristicPathLength(int** matrix)
 	}
     }
   return ((float)sum)/count;
+}
+
+float randomClusteringCo(graph* iceGraph)
+{
+  float mean = meanVertexDegree(iceGraph);
+  return mean/3186;
+}
+
+//returns the mean vertex degree of the graph
+float meanVertexDegree(graph* iceGraph)
+{
+  float sum = 0;
+  int count = 0;
+  for(int i = 0; i < 3969; i++)
+    {
+      if(iceGraph->adjacencyList[i]->data[0] != 168)
+	{
+	  sum += getChainSize(iceGraph->adjacencyList[i]);
+	  count++;
+	}
+    }
+  return sum/count;
 }
