@@ -42,8 +42,8 @@ void deleteList(graph*&);
 void setCC(graph*&, node*&); //clustering coefficient
 int getNumEdgesBetweenNeighbors(graph*, node*);
 void listToMatrix(int**&, graph*);
-int** floydWarshall(int**);
-float characteristicPathLength(int**);
+int** floydWarshall(int**, graph*);
+float characteristicPathLength(int**, graph*);
 float randomClusteringCo(graph*);
 float meanVertexDegree(graph*);
 
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
   fillRList(iceGraph, rList, means, sxxList);
   
   //beginning of loop for each threshold
-  float threshHold = .9;
+  float threshHold = .95;
   while(threshHold <=.95)
     {
       //declare adjacency matrix
@@ -172,11 +172,12 @@ int main(int argc, char** argv)
 	}
       meanCC = totalCC/ccCount;
       cout << "Mean clustering coefficient: " << meanCC << endl;
-      cout << "Random clustering co: " << randomClusteringCo(iceGraph) << endl;
+      cout << "Random graph clustering coefficient: " << randomClusteringCo(iceGraph) << endl;
 
-      //listToMatrix(matrix, iceGraph);
-      //float pathLength = characteristicPathLength(matrix);
-      //cout << "The characteristic path length is: " << pathLength << endl;
+      listToMatrix(matrix, iceGraph);
+      float pathLength = characteristicPathLength(matrix, iceGraph);
+      cout << "The characteristic path length is: " << pathLength << endl;
+      
       //deallocating memory from the adjacency list and matrix
       delete(matrix);
       deleteList(iceGraph);
@@ -463,32 +464,43 @@ void listToMatrix(int**& matrix, graph* iceGraph)
     }
 }
 
-int** floydWarshall(int** matrix)
+//performs floyd warshall algorithm to find a matrix of shortest paths
+int** floydWarshall(int** matrix, graph* iceGraph)
 {
   cout << "Inside floydWarshall" << endl;
   int** D = matrix;
   int count = 0;
-  for(int k = 1; k < 3969; k++)
+  for(int k = 0; k < 3969; k++)
     {
-      for(int i = 1; i < 3969; i++)
+      if(iceGraph->adjacencyList[k]->data[0] != 168)
 	{
-	  for(int j = 1; j < 3969; j++)
+	  for(int i = 0; i < 3968; i++)
 	    {
-	      if(D[i][j] > D[i][k] + D[k][j])
-		D[i][j] = D[i][k] + D[k][j];
-	      count++;
-	      cout << count << endl;
+	      if(iceGraph->adjacencyList[i]->data[0] != 168 && D[i][k] != INT_MAX)
+		{
+		  for(int j = i+1; j < 3969; j++)
+		    {
+		      if(D[i][j] > D[i][k] + D[k][j] && iceGraph->adjacencyList[j]->data[0] != 168 && D[j][k] != INT_MAX)
+			{
+			  D[i][j] = D[i][k] + D[k][j];
+			  D[j][i] = D[i][k] + D[k][j]; 
+			}
+		      //count++;
+		      //cout << k << endl;
+		    }
+		}
 	    }
 	}
+      //cout << k << endl;
     }
   return D;
 }
 
 //computes the average characteristic path length for the matrix
-float characteristicPathLength(int** matrix)
+float characteristicPathLength(int** matrix, graph* iceGraph)
 {
   cout << "Made it to pathLength" << endl;
-  int** finalMatrix = floydWarshall(matrix);
+  int** finalMatrix = floydWarshall(matrix, iceGraph);
   cout << "After initialization of matrix" << endl;
   int count = 0;
   int sum = 0;
@@ -503,6 +515,7 @@ float characteristicPathLength(int** matrix)
   return ((float)sum)/count;
 }
 
+//returns clustering coefficient for random graph
 float randomClusteringCo(graph* iceGraph)
 {
   float mean = meanVertexDegree(iceGraph);
