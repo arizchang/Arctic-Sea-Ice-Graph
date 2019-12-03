@@ -42,6 +42,8 @@ void deleteList(graph*&);
 void setCC(graph*&, node*&); //clustering coefficient
 int getNumEdgesBetweenNeighbors(graph*, node*);
 void listToMatrix(int**&, graph*);
+int** floydWarshall(int**);
+float characteristicPathLength(int**);
 
 int main(int argc, char** argv)
 {
@@ -170,6 +172,8 @@ int main(int argc, char** argv)
       cout << "Mean clustering coefficient: " << meanCC << endl;
 
       listToMatrix(matrix, iceGraph);
+      float pathLength = characteristicPathLength(matrix);
+      cout << "The characteristic path length is: " << pathLength << endl;
       //deallocating memory from the adjacency list and matrix
       delete(matrix);
       deleteList(iceGraph);
@@ -454,4 +458,44 @@ void listToMatrix(int**& matrix, graph* iceGraph)
 	  current = current->next;
 	}
     }
+}
+
+int** floydWarshall(int** matrix)
+{
+  cout << "Inside floydWarshall" << endl;
+  int** D = matrix;
+  int count = 0;
+  for(int k = 1; k < 3969; k++)
+    {
+      for(int i = 1; i < 3969; i++)
+	{
+	  for(int j = 1; j < 3969; j++)
+	    {
+	      if(D[i][j] > D[i][k] + D[k][j])
+		D[i][j] = D[i][k] + D[k][j];
+	      count++;
+	      cout << count << endl;
+	    }
+	}
+    }
+  return D;
+}
+
+//computes the average characteristic path length for the matrix
+float characteristicPathLength(int** matrix)
+{
+  cout << "Made it to pathLength" << endl;
+  int** finalMatrix = floydWarshall(matrix);
+  cout << "After initialization of matrix" << endl;
+  int count = 0;
+  int sum = 0;
+  for(int i = 0; i < 3968; i++)
+    {
+      for(int j = i+1; j < 3969; j++)
+	{
+	  sum += finalMatrix[i][j];
+	  count++;
+	}
+    }
+  return ((float)sum)/count;
 }
