@@ -111,7 +111,7 @@ int main(int argc, char** argv)
   fillRList(iceGraph, rList, means, sxxList);
   
   //beginning of loop for each threshold
-  float threshHold = .95;
+  float threshHold = .90;
   while(threshHold <=.95)
     {
       //declare adjacency matrix
