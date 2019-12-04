@@ -42,8 +42,8 @@ void deleteList(graph*&);
 void setCC(graph*&, node*&); //clustering coefficient
 int getNumEdgesBetweenNeighbors(graph*, node*);
 void listToMatrix(int**&, graph*);
-int** floydWarshall(int**, graph*);
-float characteristicPathLength(int**, graph*);
+void floydWarshall(int**&, graph*);
+float characteristicPathLength(int**&, graph*);
 float randomClusteringCo(graph*, float);
 float meanVertexDegree(graph*);
 float randomPathLength(graph*, float);
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
 	  else
 	    weekStr = to_string(j);
 	  file = to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
-	  //file = "./code/CSE310_project_subregion/" + to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
+	  //file = "CS310_project_subregion/" + to_string(year) + "/Beaufort_Sea_diffw" + weekStr + "y" + to_string(year) + "+landmask";
 	  
 	  //opening and reading binary files info arrays of sea ice concentration
 	  ifstream inputFile(file, ios::in | ios::binary);
@@ -179,9 +179,9 @@ int main(int argc, char** argv)
       cout << "Random graph clustering coefficient: " << randomClusteringCo(iceGraph, mean) << endl;
       cout << "Random graph characteristic path length: " << randomPathLength(iceGraph, mean) << endl;
 
-      //listToMatrix(matrix, iceGraph);
-      //float pathLength = characteristicPathLength(matrix, iceGraph);
-      //cout << "The characteristic path length is: " << pathLength << endl;
+      listToMatrix(matrix, iceGraph);
+      float pathLength = characteristicPathLength(matrix, iceGraph);
+      cout << "The characteristic path length is: " << pathLength << endl;
       
       //deallocating memory from the adjacency list and matrix
       delete(matrix);
@@ -444,13 +444,13 @@ void listToMatrix(int**& matrix, graph* iceGraph)
 {
   node* current;
 
-  //initialize matrix to -1
+  //initialize matrix to INT_MAX
   for(int i = 0; i < 3969; i++)
     {
       for(int j = i; j < 3969; j++)
 	{
-	  matrix[i][j] = -1;
-	  matrix[j][i] = -1;
+	  matrix[i][j] = INT_MAX;
+	  matrix[j][i] = INT_MAX;
 	}
     }
 
@@ -470,10 +470,10 @@ void listToMatrix(int**& matrix, graph* iceGraph)
 }
 
 //performs floyd warshall algorithm to find a matrix of shortest paths
-int** floydWarshall(int** matrix, graph* iceGraph)
+void floydWarshall(int**& matrix, graph* iceGraph)
 {
   cout << "Inside floydWarshall" << endl;
-  int** D = matrix;
+  //int** D = matrix;
   int count = 0;
   for(int k = 0; k < 3969; k++)
     {
@@ -481,32 +481,30 @@ int** floydWarshall(int** matrix, graph* iceGraph)
 	{
 	  for(int i = 0; i < 3968; i++)
 	    {
-	      if(iceGraph->adjacencyList[i]->data[0] != 168 && D[i][k] != -1)
+	      if(iceGraph->adjacencyList[i]->data[0] != 168 && matrix[i][k] != INT_MAX)
 		{
 		  for(int j = i+1; j < 3969; j++)
 		    {
-		      if(D[i][j] > D[i][k] + D[k][j] && iceGraph->adjacencyList[j]->data[0] != 168 && D[j][k] != -1)
+		      if(matrix[k][j] != INT_MAX && iceGraph->adjacencyList[j]->data[0] != 168 && matrix[i][k] + matrix[k][j] < matrix[i][j])
 			{
-			  D[i][j] = D[i][k] + D[k][j];
-			  D[j][i] = D[i][k] + D[k][j]; 
-			  //cout << "It is adding this: " << D[i][j] << endl;
+			  matrix[i][j] = matrix[i][k] + matrix[k][j];
+			  matrix[j][i] = matrix[i][j];
 			}
-		      //count++;
-		      //cout << k << endl;
 		    }
 		}
 	    }
 	}
-      //cout << k << endl;
     }
-  return D;
+  //return matrix;
 }
 
 //computes the average characteristic path length for the matrix
-float characteristicPathLength(int** matrix, graph* iceGraph)
+float characteristicPathLength(int**& matrix, graph* iceGraph)
 {
   cout << "Made it to pathLength" << endl;
-  int** finalMatrix = floydWarshall(matrix, iceGraph);
+  //int** finalMatrix = floydWarshall(matrix, iceGraph);
+  floydWarshall(matrix, iceGraph);
+  int** finalMatrix = matrix;
   cout << "After initialization of matrix" << endl;
   int count = 0;
   int sum = 0;
@@ -514,11 +512,11 @@ float characteristicPathLength(int** matrix, graph* iceGraph)
     {
       for(int j = i+1; j < 3969; j++)
 	{
-	  if(finalMatrix[i][j] != -1)
+	  if(finalMatrix[i][j] != INT_MAX)
 	    {
 	      sum += finalMatrix[i][j];
 	      count++;
-	      cout << sum << endl;
+	      //cout << finalMatrix[i][j] << endl;
 	    }
 	}
     }
